@@ -32,6 +32,7 @@ sheet.write(0, 11, '电子书价')
 
 
 item = []
+a=0
 
 
 def save_to_excel(soup):
