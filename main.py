@@ -31,7 +31,6 @@ sheet.write(0, 10, '打折')
 sheet.write(0, 11, '电子书价')
 
 
-n = 1
 item = []
 
 
