@@ -2,12 +2,14 @@ import requests
 import xlwt
 from bs4 import BeautifulSoup
 import pandas as pd
-import lxml
 
 
 def request_dangdang(url):
     try:
-        response = requests.get(url)
+        headers={
+            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44'
+        }
+        response = requests.get(url,headers=headers)
         if response.status_code == 200:
             return response.text
     except requests.RequestException:
@@ -16,23 +18,7 @@ def request_dangdang(url):
 
 book = xlwt.Workbook(encoding='utf-8', style_compression=0)
 
-sheet = book.add_sheet('当当', cell_overwrite_ok=True)
-sheet.write(0, 0, '排名')
-sheet.write(0, 1, '图片')
-sheet.write(0, 2, '名字')
-sheet.write(0, 3, '评论数')
-sheet.write(0, 4, '作者')
-sheet.write(0, 5, '出版时间')
-sheet.write(0, 6, '出版社')
-sheet.write(0, 7, '五星评论数')
-sheet.write(0, 8, '折后价')
-sheet.write(0, 9, '售价')
-sheet.write(0, 10, '打折')
-sheet.write(0, 11, '电子书价')
-
-
 item = []
-a=0
 
 
 def save_to_excel(soup):
@@ -57,14 +43,15 @@ def save_to_excel(soup):
             price_e_n = li.find(class_="price_e").find(class_="price_n")  # ¥7.9
             if price_e_n is not None:
                 price_e_n = price_e_n.text
-            i={'排名':list_num,'图片':img,'名字':name,'评论数':pls,'作者':title,'出版时间':cbsj,'出版社':cbs,'五星评论数':biaosheng,'折后价':price_n,'打折':price_s,'电子书价':price_e_n}
-            print(i)
-            item.append(i)
+            q = {'排名': list_num, '图片': img, '名字': name, '评论数': pls, '作者': title, '出版时间': cbsj, '出版社': cbs,
+                 '五星评论数': biaosheng, '折后价': price_n, '价格': price_r, '打折': price_s, '电子书价': price_e_n}
+            print(q)
+            item.append(q)
         except AttributeError:
             print("!")
 
-        df=pd.DataFrame(item)
-        df.to_csv("x.csv",index=False)
+        df = pd.DataFrame(item)
+        df.to_csv("x.csv", index=False)
 
 
 def main(page):
@@ -72,6 +59,7 @@ def main(page):
     html = request_dangdang(url)
     soup = BeautifulSoup(html, 'lxml')
     save_to_excel(soup)
+
 
 if __name__ == '__main__':
 
