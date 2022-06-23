@@ -72,7 +72,6 @@ def main(page):
     html = request_dangdang(url)
     soup = BeautifulSoup(html, 'lxml')
     save_to_excel(soup)
-z
 
 if __name__ == '__main__':
 
